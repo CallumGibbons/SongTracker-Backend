@@ -11,18 +11,18 @@ import java.util.List;
 public class Artist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int artist_id;
+    private Long artist_id;
 
     private String name;
     private int listens;
     private boolean is_favourite;
 
-    @OneToMany(mappedBy = "artist")
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Album> albums;
 
     Artist(){}
 
-    Artist(int artist_id, String name, int listens, boolean is_favourite, List<Album> albums){
+    Artist(Long artist_id, String name, int listens, boolean is_favourite, List<Album> albums){
         this.artist_id = artist_id;
         this.name = name;
         this.listens = listens;

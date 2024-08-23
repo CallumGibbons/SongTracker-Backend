@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 public class Listen {
 
     private @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) int history_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) Long history_id;
     private Timestamp listening_time;
     private String artist_name;
     private String album_name;
@@ -24,7 +24,8 @@ public class Listen {
 
     Listen(){}
 
-    Listen(String song_name, Timestamp listening_time, String artist_name, String album_name){
+    Listen(Long history_id,String song_name, Timestamp listening_time, String artist_name, String album_name){
+        this.history_id = history_id;
         this.album_name = album_name;
         this.artist_name = artist_name;
         this.song_name = song_name;

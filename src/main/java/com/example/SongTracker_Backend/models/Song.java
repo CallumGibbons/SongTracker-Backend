@@ -14,20 +14,21 @@ import lombok.Setter;
 public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int song_id;
+    private boolean is_favourite;
+    private Long song_id;
     private String name;
     private int listens;
-    private boolean is_favourite;
     @ManyToOne
-    @JoinColumn(name = "album_id")
+    @JoinColumn(name = "album_id", nullable = false)
     private Album album;
     @ManyToOne
-    @JoinColumn(name = "artist_id")
+    @JoinColumn(name = "artist_id", nullable = false)
     private Artist artist;
+
 
     Song(){}
 
-    Song(int song_id, String name, int listens, boolean is_favourite, Album album, Artist artist){
+    Song(Long song_id, String name, int listens, boolean is_favourite, Album album, Artist artist){
         this.song_id = song_id;
         this.name = name;
         this.listens = listens;
@@ -36,4 +37,7 @@ public class Song {
         this.artist = artist;
     }
 
+    public boolean isIs_favourite() {
+        return is_favourite;
+    }
 }
