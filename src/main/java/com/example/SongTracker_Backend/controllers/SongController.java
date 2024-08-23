@@ -3,10 +3,11 @@ package com.example.SongTracker_Backend.controllers;
 import com.example.SongTracker_Backend.Exceptions.SongNotFoundException;
 import com.example.SongTracker_Backend.models.Song;
 import com.example.SongTracker_Backend.repos.SongRepo;
+import jakarta.persistence.Table;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Table(name = "songs")
 @RestController
 public class SongController {
 
@@ -30,14 +31,14 @@ public class SongController {
 
     // Get a specific song by ID
     @GetMapping("/songs/{song_id}")
-    public Song one(@PathVariable Long song_id) {
+    public Song one(@PathVariable Integer song_id) {
         return repo.findById(song_id)
                 .orElseThrow(() -> new SongNotFoundException(song_id));
     }
 
     // Update a specific song by ID
     @PutMapping("/songs/{song_id}")
-    public Song replaceSong(@RequestBody Song newSong, @PathVariable Long song_id) {
+    public Song replaceSong(@RequestBody Song newSong, @PathVariable Integer song_id) {
         return repo.findById(song_id)
                 .map(song -> {
                     song.setName(newSong.getName());
@@ -55,7 +56,7 @@ public class SongController {
 
     // Delete a specific song by ID
     @DeleteMapping("/songs/{song_id}")
-    public void deleteSong(@PathVariable Long song_id) {
+    public void deleteSong(@PathVariable Integer song_id) {
         repo.deleteById(song_id);
     }
 }

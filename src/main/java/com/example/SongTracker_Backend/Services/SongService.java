@@ -1,5 +1,6 @@
 package com.example.SongTracker_Backend.Services;
 
+import com.example.SongTracker_Backend.Exceptions.SongNotFoundException;
 import com.example.SongTracker_Backend.models.Album;
 import com.example.SongTracker_Backend.models.Artist;
 import com.example.SongTracker_Backend.models.Song;
@@ -25,7 +26,7 @@ public class SongService {
     private ArtistRepo artistRepo;
 
     @Transactional
-    public void deleteSongByName(Long song_id) {
+    public void deleteSongById(Integer song_id) {
         Optional<Song> optionalSong = songRepo.findById(song_id);
 
         if (optionalSong.isPresent()) {
@@ -33,15 +34,22 @@ public class SongService {
             Album album = song.getAlbum();
             Artist artist = song.getArtist();
 
-            album.setListens(album.getListens() - song.getListens());
-            artist.setListens(artist.getListens() - song.getListens());
+            int listensToRemove = (song.getListens() != null) ? song.getListens() : 0;
 
-            albumRepo.save(album);
-            artistRepo.save(artist);
+            if (album != null) {
+                album.setListens(album.getListens() - listensToRemove);
+                albumRepo.save(album);
+            }
+
+            if (artist != null) {
+                artist.setListens(artist.getListens() - listensToRemove);
+                artistRepo.save(artist);
+            }
 
             songRepo.delete(song);
         } else {
-            throw new RuntimeException("Song not found: " + song_id);
+            throw new SongNotFoundException(song_id);
         }
     }
 }
+

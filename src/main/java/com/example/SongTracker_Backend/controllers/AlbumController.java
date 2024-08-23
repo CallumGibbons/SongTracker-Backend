@@ -3,10 +3,11 @@ package com.example.SongTracker_Backend.controllers;
 import com.example.SongTracker_Backend.Exceptions.AlbumNotFoundException;
 import com.example.SongTracker_Backend.models.Album;
 import com.example.SongTracker_Backend.repos.AlbumRepo;
+import jakarta.persistence.Table;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Table(name = "albums")
 @RestController
 public class AlbumController {
     private final AlbumRepo repo;
@@ -29,14 +30,14 @@ public class AlbumController {
 
     // Get a specific album by album_id
     @GetMapping("/albums/{album_id}")
-    public Album one(@PathVariable Long album_id) {
+    public Album one(@PathVariable Integer album_id) {
         return repo.findById(album_id)
                 .orElseThrow(() -> new AlbumNotFoundException(album_id));
     }
 
     // Update a specific album by album_id
     @PutMapping("/albums/{album_id}")
-    public Album replaceAlbum(@RequestBody Album newAlbum, @PathVariable Long album_id) {
+    public Album replaceAlbum(@RequestBody Album newAlbum, @PathVariable Integer album_id) {
         return repo.findById(album_id)
                 .map(album -> {
                     album.setName(newAlbum.getName());
@@ -54,7 +55,7 @@ public class AlbumController {
 
     // Delete a specific album by album_id
     @DeleteMapping("/albums/{album_id}")
-    public void deleteAlbum(@PathVariable Long album_id) {
+    public void deleteAlbum(@PathVariable Integer album_id) {
         repo.deleteById(album_id);
     }
 }

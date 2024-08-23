@@ -1,10 +1,7 @@
 package com.example.SongTracker_Backend.models;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,10 +10,11 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity
+@Table(name = "listening_history")
 public class Listen {
 
     private @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) Long history_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) Integer history_id;
     private Timestamp listening_time;
     private String artist_name;
     private String album_name;
@@ -24,7 +22,7 @@ public class Listen {
 
     Listen(){}
 
-    Listen(Long history_id,String song_name, Timestamp listening_time, String artist_name, String album_name){
+    Listen(Integer history_id,String song_name, Timestamp listening_time, String artist_name, String album_name){
         this.history_id = history_id;
         this.album_name = album_name;
         this.artist_name = artist_name;

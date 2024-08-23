@@ -1,23 +1,19 @@
 package com.example.SongTracker_Backend.models;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
 @Entity
+@Table(name = "songs")
 public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer song_id;
     private boolean is_favourite;
-    private Long song_id;
     private String name;
-    private int listens;
+    private Integer listens;
     @ManyToOne
     @JoinColumn(name = "album_id", nullable = false)
     private Album album;
@@ -28,7 +24,7 @@ public class Song {
 
     Song(){}
 
-    Song(Long song_id, String name, int listens, boolean is_favourite, Album album, Artist artist){
+    Song(Integer song_id, String name, Integer listens, boolean is_favourite, Album album, Artist artist){
         this.song_id = song_id;
         this.name = name;
         this.listens = listens;
