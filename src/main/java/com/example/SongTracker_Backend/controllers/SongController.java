@@ -1,62 +1,50 @@
 package com.example.SongTracker_Backend.controllers;
 
-import com.example.SongTracker_Backend.Exceptions.SongNotFoundException;
+import com.example.SongTracker_Backend.Services.SongService;
 import com.example.SongTracker_Backend.models.Song;
-import com.example.SongTracker_Backend.repos.SongRepo;
 import jakarta.persistence.Table;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @Table(name = "songs")
 @RestController
+@RequestMapping("/songs")
 public class SongController {
 
-    private final SongRepo repo;
+    private final SongService songService;
 
-    public SongController(SongRepo repo) {
-        this.repo = repo;
+    public SongController(SongService songService) {
+        this.songService = songService;
     }
 
     // Get all songs
-    @GetMapping("/songs")
+    @GetMapping
     public List<Song> all() {
-        return repo.findAll();
+        return songService.getAllSongs();
     }
 
     // Add a new song
-    @PostMapping("/songs")
+    @PostMapping
     public Song newSong(@RequestBody Song newSong) {
-        return repo.save(newSong);
+        return songService.saveSong(newSong);
     }
 
     // Get a specific song by ID
-    @GetMapping("/songs/{song_id}")
+    @GetMapping("/{song_id}")
     public Song one(@PathVariable Integer song_id) {
-        return repo.findById(song_id)
-                .orElseThrow(() -> new SongNotFoundException(song_id));
+        return songService.getSongById(song_id);
     }
 
     // Update a specific song by ID
-    @PutMapping("/songs/{song_id}")
+    @PutMapping("/{song_id}")
     public Song replaceSong(@RequestBody Song newSong, @PathVariable Integer song_id) {
-        return repo.findById(song_id)
-                .map(song -> {
-                    song.setName(newSong.getName());
-                    song.setAlbum(newSong.getAlbum());
-                    song.setArtist(newSong.getArtist());
-                    song.set_favourite(newSong.isIs_favourite());
-                    song.setListens(newSong.getListens());
-                    return repo.save(song);
-                })
-                .orElseGet(() -> {
-                    newSong.setSong_id(song_id); // Set the ID to the provided path variable
-                    return repo.save(newSong);
-                });
+        return songService.updateSong(newSong, song_id);
     }
 
     // Delete a specific song by ID
-    @DeleteMapping("/songs/{song_id}")
+    @DeleteMapping("/{song_id}")
     public void deleteSong(@PathVariable Integer song_id) {
-        repo.deleteById(song_id);
+        songService.deleteSongById(song_id);
     }
 }

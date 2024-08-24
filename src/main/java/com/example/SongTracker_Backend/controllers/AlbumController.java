@@ -1,61 +1,49 @@
 package com.example.SongTracker_Backend.controllers;
 
-import com.example.SongTracker_Backend.Exceptions.AlbumNotFoundException;
+import com.example.SongTracker_Backend.Services.AlbumService;
 import com.example.SongTracker_Backend.models.Album;
-import com.example.SongTracker_Backend.repos.AlbumRepo;
 import jakarta.persistence.Table;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@Table(name = "albums")
-@RestController
-public class AlbumController {
-    private final AlbumRepo repo;
 
-    public AlbumController(AlbumRepo repo) {
-        this.repo = repo;
+@RestController
+@Table(name = "albums")
+public class AlbumController {
+
+    private final AlbumService albumService;
+
+    public AlbumController(AlbumService albumService) {
+        this.albumService = albumService;
     }
 
     // Get all albums
     @GetMapping("/albums")
     public List<Album> all() {
-        return repo.findAll();
+        return albumService.getAllAlbums();
     }
 
-    // Add a new Album
+    // Add a new album
     @PostMapping("/albums")
     public Album newAlbum(@RequestBody Album newAlbum) {
-        return repo.save(newAlbum);
+        return albumService.createAlbum(newAlbum);
     }
 
     // Get a specific album by album_id
     @GetMapping("/albums/{album_id}")
     public Album one(@PathVariable Integer album_id) {
-        return repo.findById(album_id)
-                .orElseThrow(() -> new AlbumNotFoundException(album_id));
+        return albumService.getAlbumById(album_id);
     }
 
     // Update a specific album by album_id
     @PutMapping("/albums/{album_id}")
     public Album replaceAlbum(@RequestBody Album newAlbum, @PathVariable Integer album_id) {
-        return repo.findById(album_id)
-                .map(album -> {
-                    album.setName(newAlbum.getName());
-                    album.set_favourite(newAlbum.is_favourite());
-                    album.setArtist(newAlbum.getArtist());
-                    album.setListens(newAlbum.getListens());
-                    album.setSongs(newAlbum.getSongs());
-                    return repo.save(album);
-                })
-                .orElseGet(() -> {
-                    newAlbum.setAlbum_id(album_id); // Set the ID to the provided path variable
-                    return repo.save(newAlbum);
-                });
+        return albumService.updateAlbum(album_id, newAlbum);
     }
 
     // Delete a specific album by album_id
     @DeleteMapping("/albums/{album_id}")
     public void deleteAlbum(@PathVariable Integer album_id) {
-        repo.deleteById(album_id);
+        albumService.deleteAlbum(album_id);
     }
 }

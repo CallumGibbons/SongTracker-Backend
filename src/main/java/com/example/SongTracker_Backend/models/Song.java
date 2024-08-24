@@ -1,4 +1,5 @@
 package com.example.SongTracker_Backend.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class Song {
     private Album album;
     @ManyToOne
     @JoinColumn(name = "artist_id", nullable = false)
+    @JsonIgnore
     private Artist artist;
 
 
